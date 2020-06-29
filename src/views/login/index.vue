@@ -4,15 +4,15 @@
       <div class="title">
         <img src="../../assets/img/logo_index.png" alt />
       </div>
-      <el-form style="margin-top:20px">
-        <el-form-item>
-          <el-input placeholder="请输入手机号"></el-input>
+      <el-form style="margin-top:20px" :model="loginForm" :rules=" loginRules">
+        <el-form-item prop="mobile">
+          <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
-        <el-form-item>
-          <el-input style="width:65%" placeholder="请输入验证码"></el-input>
+        <el-form-item prop="code">
+          <el-input v-model="loginForm.code" style="width:65%" placeholder="请输入验证码"></el-input>
           <el-button style="float:right" plain>发送验证码</el-button>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="check">
             <el-checkbox v-model="checked">我已经阅读并且同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
@@ -24,7 +24,20 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data () {
+    return {
+      loginForm: {
+        mobile: '',
+        code: '',
+        check: false
+      },
+      loginRules: {
+
+      }
+    }
+  }
+}
 </script>
 
 <style lang="less">

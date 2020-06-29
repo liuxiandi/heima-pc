@@ -4,7 +4,7 @@
       <div class="title">
         <img src="../../assets/img/logo_index.png" alt />
       </div>
-      <el-form style="margin-top:20px" :model="loginForm" :rules=" loginRules">
+      <el-form ref="myForm" style="margin-top:20px" :model="loginForm" :rules=" loginRules">
         <el-form-item prop="mobile">
           <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
@@ -13,10 +13,10 @@
           <el-button style="float:right" plain>发送验证码</el-button>
         </el-form-item>
         <el-form-item prop="check">
-            <el-checkbox v-model="checked">我已经阅读并且同意用户协议和隐私条款</el-checkbox>
+            <el-checkbox v-model="loginForm.check">我已经阅读并且同意用户协议和隐私条款</el-checkbox>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" style="width:100%">登录</el-button>
+            <el-button @click="submitLogin" type="primary" style="width:100%">登录</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -33,8 +33,29 @@ export default {
         check: false
       },
       loginRules: {
-
+        mobile: [{ required: true, message: '请输入手机号' },
+          { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确' }],
+        code: [{ required: true, message: '请输入验证码' },
+          { pattern: /^\d{6}$/, message: '验证码格式不正确' }],
+        check: [{
+          validator: function (rule, value, callback) {
+            if (value) {
+              callback()
+            } else {
+              callback(new Error('请认真阅读并且同意'))
+            }
+          }
+        }]
       }
+    }
+  },
+  methods: {
+    submitLogin () {
+      this.$refs.myForm.validate(function (isOk) {
+        if (isOk) {
+          console.log('校验成功')
+        }
+      })
     }
   }
 }

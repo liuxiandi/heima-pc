@@ -66,8 +66,9 @@ export default {
         }).then(result => {
           // 成功 之后打印结果
           window.localStorage.setItem('user-token', result.data.data.token)
+          this.$router.push('/home')
         }).catch(() => {
-
+          this.$message.error('用户名或者密码错误')
         })
       })
     }

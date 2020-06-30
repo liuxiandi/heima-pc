@@ -61,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .login {
   background-image: url(../../assets/img/login_bg.jpg);
   background-size: cover;

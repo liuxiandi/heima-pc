@@ -11,10 +11,8 @@ Vue.config.productionTip = false
 // vue.use相当于全局注册 一旦全局注册任何位置都可与使用组件 Vue.use实际上会调用element-ui对象
 // 里面的一个install方法 并且传入当前的vue 对象
 Vue.use(ElementUI)
-// axios赋值给全局属性
-Vue.prototype.$axios = axios
-// 配置baseURL
-axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0'
+axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 配置公共的请求头地址
+Vue.prototype.$axios = axios // 将axios赋值给 Vue对象的原型属性
 new Vue({
   router,
   render: h => h(App)

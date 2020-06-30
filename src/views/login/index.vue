@@ -51,10 +51,24 @@ export default {
   },
   methods: {
     submitLogin () {
-      this.$refs.myForm.validate(function (isOk) {
-        if (isOk) {
-          console.log('校验成功')
-        }
+      // this.$refs.myForm.validate(function (isOk) {
+      //   if (isOk) {
+      //     console.log('校验成功')
+      //   }
+      // })
+      // 第二种方法 使用promise
+      this.$refs.myForm.validate().then(() => {
+        this.$axios({
+          url: '/authorizations', // 请求地址
+          data: this.loginForm,
+          // data: { ...this.loginForm, checked: null }, // body请求体参数
+          method: 'post'
+        }).then(result => {
+          // 成功 之后打印结果
+          window.localStorage.setItem('user-token', result.data.data.token)
+        }).catch(() => {
+
+        })
       })
     }
   }

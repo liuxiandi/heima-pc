@@ -1,11 +1,12 @@
 <template>
   <el-container>
-    <el-aside>
-      <h1>左侧导航栏</h1>
+    <el-aside style="width:230px;">
+
+      <layout-aside></layout-aside>
     </el-aside>
     <el-container>
       <el-header>
-        <h1>顶部操作栏</h1>
+        <layout-header></layout-header>
       </el-header>
       <el-main>
         <h1>主要区域</h1>
@@ -17,7 +18,14 @@
 </template>
 
 <script>
-export default {}
+import LayoutAside from '@/components/home/layout-aside'
+import LayoutHeader from '@/components/home/layout-header'
+export default {
+  components: {
+    'layout-aside': LayoutAside,
+    'layout-header': LayoutHeader
+  }
+}
 </script>
 
 <style>

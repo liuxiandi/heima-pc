@@ -7,15 +7,16 @@
   <el-col class="right" :span="12">
       <el-row type='flex' align="middle" justify="end">
           <img :src="userInfo.photo" alt="">
-           <el-dropdown trigger='click'>
+           <el-dropdown trigger='click' @command="clickMenu">
                <!-- 显示的内容 -->
                <span>{{userInfo.name}}</span>
+               <i class="el-icon-caret-bottom"></i>
                 <!-- 下拉内容需要做具名插槽dropdown  el-dropdown-menu是专门做下拉的组件 -->
                 <el-dropdown-menu slot="dropdown" >
                    <!-- 下拉选项 el-dropdown-item 作为下拉选项组件-->
-                    <el-dropdown-item>个人信息</el-dropdown-item>
-                    <el-dropdown-item>git地址</el-dropdown-item>
-                    <el-dropdown-item>退出</el-dropdown-item>
+                    <el-dropdown-item command="info">个人信息</el-dropdown-item>
+                    <el-dropdown-item command="git">git地址</el-dropdown-item>
+                    <el-dropdown-item command="out">退出</el-dropdown-item>
 
                 </el-dropdown-menu>
            </el-dropdown>
@@ -29,6 +30,19 @@ export default {
   data () {
     return {
       userInfo: {}
+    }
+  },
+  methods: {
+    clickMenu (command) {
+      // alert('点击了菜单' + command)
+      if (command === 'info') {
+
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/liuxiandi/heima-pc'
+      } else {
+        window.localStorage.removeItem('user-token')
+        this.$router.push('/login')
+      }
     }
   },
   created () {
@@ -64,6 +78,10 @@ export default {
                 height: 40px;
                 border-radius: 50%;
                 margin-right: 10px;
+            }
+            i {
+                font-size: 15px;
+                margin-left: 5px;
             }
         }
     }

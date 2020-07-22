@@ -8,8 +8,8 @@
       <el-header>
         <layout-header></layout-header>
       </el-header>
-      <el-main>
-        <h1>主要区域</h1>
+      <el-main style="padding: 0;">
+
         <!-- 这离放二级路由容器 -->
         <router-view></router-view>
       </el-main>

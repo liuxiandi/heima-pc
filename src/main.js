@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+// 引入权限模块
+import '@/permission'
 // 引入ElementUI
 import ElementUI from 'element-ui'
 // 引入element-UI样式

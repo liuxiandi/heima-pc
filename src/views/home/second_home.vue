@@ -13,9 +13,9 @@ export default {
   data () {
     return {
       list: [
-        'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3723735161,3499796594&fm=26&gp=0.jpg',
-        'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3463297378,2800532660&fm=26&gp=0.jpg',
-        'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=94929661,172192544&fm=26&gp=0.jpg',
+        'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3434969461,262848654&fm=26&gp=0.jpg',
+        'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3787529884,3555094911&fm=15&gp=0.jpg',
+        'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=421442152,2025438379&fm=26&gp=0.jpg',
         'https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2244546120,2806054669&fm=26&gp=0.jpg'
       ]
     }

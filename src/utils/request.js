@@ -13,4 +13,12 @@ axios.interceptors.request.use(function (config) {
   return Promise.reject(error)
 })
 
+axios.interceptors.response.use(function (response) {
+  // 回调函数第一个参数是响应体
+  // 在拦截器中 需要将数据返回 将数据进行解构
+  return response.data ? response.data : {}
+}, function () {
+
+})
+
 export default axios

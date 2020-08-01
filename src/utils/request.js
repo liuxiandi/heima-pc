@@ -1,4 +1,5 @@
 import axios from 'axios'
+import router from '@/router'
 
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 配置公共的请求头地址
 // 在请求拦截器中对所有接口进行统一注入token
@@ -12,13 +13,25 @@ axios.interceptors.request.use(function (config) {
 }, function (error) {
   return Promise.reject(error)
 })
-
+// 响应拦截器
 axios.interceptors.response.use(function (response) {
   // 回调函数第一个参数是响应体
   // 在拦截器中 需要将数据返回 将数据进行解构
   return response.data ? response.data : {}
-}, function () {
+  // 成功的时候执行
+}, function (error) {
+  // 失败的时候执行
+  if (error.response.status === 401) {
+    // 删除钥匙
+    localStorage.removeItem('user-token')
+    // 直接导入路由实例对象 使用跳转方式和组件中的this.$router是一样的
+    // 跳回登录页
+    // this.$router 是错误的  this不是组件实例
+    router.push('./login')
+  }
 
+  // 进行错误处理
+  return Promise.reject(error)
 })
 
 export default axios

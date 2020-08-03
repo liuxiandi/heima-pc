@@ -23,10 +23,14 @@ export default {
 }
 </script>
 
-<style>
+<style lang="less">
 .second_home {
   height: calc(100vh - 60px);
   background-image: url("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1595424172917&di=d90bffeca1da93c26a651fee9c0da6d0&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F28%2F20160828025842_SxYkf.jpeg");
   background-size: cover;
+  // img {
+  //   width: 100%;
+  //   height: 100%;
+  // }
 }
 </style>

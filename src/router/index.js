@@ -23,6 +23,10 @@ const routes = [
       {
         path: '',
         component: SecondHome
+      },
+      {
+        path: 'comment',
+        component: () => import('@/views/comment')
       }
     ]
   }

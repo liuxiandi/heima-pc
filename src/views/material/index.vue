@@ -9,7 +9,7 @@
 
     <!-- 放置标签页 -->
     <el-tabs v-model="activeName">
-      <el-tab-pane label="全部素材" name="first">全部素材</el-tab-pane>
+      <el-tab-pane label="全部素材" name="all">全部素材</el-tab-pane>
       <el-tab-pane label="收藏素材" name="second">收藏素材</el-tab-pane>
     </el-tabs>
   </el-card>
@@ -19,8 +19,27 @@
 export default {
   data () {
     return {
-      activeName: 'first'
+      activeName: 'all',
+      //   定义一个数组 接受全部素材的数据
+      list: []
     }
+  },
+  methods: {
+    getMaterial () {
+      this.$axios({
+        url: '/user/images',
+        params: {
+          collect: false
+        },
+        //   data参数放的是body参数
+        data: {}
+      }).then(result => {
+
+      })
+    }
+  },
+  created () {
+    this.getMaterial()
   }
 }
 </script>

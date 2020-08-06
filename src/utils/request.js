@@ -1,7 +1,16 @@
 import axios from 'axios'
 import router from '@/router'
+import JSONBig from 'json-bigint'
 
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 配置公共的请求头地址
+
+// 对axios返回的数据进行自定义处理 用JSONBig.parse代替原来的json
+// transformResponse中要返回处理的结果
+// transformResponse是所有请求字符串 转化成对象的入口 在这个位置处理就相当于所有接口都处理了
+axios.defaults.transformResponse = [function (data) {
+  // data是响应回来的字符串
+  return data ? JSONBig.parse(data) : {}
+}]
 // 在请求拦截器中对所有接口进行统一注入token
 axios.interceptors.request.use(function (config) {
   // 成功时执行  第一个 参数 会有一个config  config 就是所有的axios的请求信息

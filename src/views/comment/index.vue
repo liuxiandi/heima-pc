@@ -59,7 +59,8 @@ export default {
           // query 参数
           params: {
             // 参数的文章id
-            article_id: row.id
+            article_id: row.id.toString()
+            // 前端传字符串到后端 只要和原数字一样就行 后端会自动将字符串转换成大数字类型
           },
           data: {
             // 是打开还是关闭  此状态和评论状态相反

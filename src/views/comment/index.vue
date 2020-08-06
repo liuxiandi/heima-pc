@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <bread-crumb slot="header">
       <template slot="title">评论管理</template>
     </bread-crumb>
@@ -30,7 +30,7 @@
     <el-row type="flex" justify="center" align="middle" style="height:80px">
       <el-pagination background layout="prev, pager, next" :total="page.total"
       :current-page="page.currentPage"
-      :page-size="pageSize"
+      :page-size="page.pageSize"
       @current-change="changePage"></el-pagination>
     </el-row>
   </el-card>
@@ -49,7 +49,8 @@ export default {
         //  每页显示条目个数 默认值是10
         pageSize: 10
       },
-      list: []
+      list: [],
+      loading: false
     }
   },
   methods: {
@@ -62,6 +63,7 @@ export default {
       this.getComment()
     },
     getComment () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: {
@@ -73,6 +75,7 @@ export default {
         // console.log(result)
         this.list = result.data.results
         this.page.total = result.data.total_count
+        this.loading = false
       })
     },
     formaterBool (row, column, cellvalue, index) {

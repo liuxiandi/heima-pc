@@ -15,12 +15,24 @@
       <el-table-column label="操作">
         <!-- 可以放组件 -->
         <template slot-scope="obj">
-            <el-button size="small" type='text'>修改</el-button>
-             <!-- 文本内容要根据 当前行里面的评论状态决定显示还是隐藏 -->
-            <el-button @click="openOrclose(obj.row)" size="small" type='text'>{{obj.row.comment_status ? '关闭' : '打开'}}评论</el-button>
-          </template>
+          <el-button size="small" type="text">修改</el-button>
+          <!-- 文本内容要根据 当前行里面的评论状态决定显示还是隐藏 -->
+          <el-button
+            @click="openOrclose(obj.row)"
+            size="small"
+            type="text"
+          >{{obj.row.comment_status ? '关闭' : '打开'}}评论</el-button>
+        </template>
       </el-table-column>
     </el-table>
+
+    <!-- 分页组件 -->
+    <el-row type="flex" justify="center" align="middle" style="height:80px">
+      <el-pagination background layout="prev, pager, next" :total="page.total"
+      :current-page="page.currentPage"
+      :page-size="pageSize"
+      @current-change="changePage"></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -28,19 +40,39 @@
 export default {
   data () {
     return {
+      // 分页组件需要的参数 单独放置一个对象
+      page: {
+        // 默认总数
+        total: 0,
+        // 默认页码是第几页
+        currentPage: 1,
+        //  每页显示条目个数 默认值是10
+        pageSize: 10
+      },
       list: []
     }
   },
   methods: {
+    // 捕获页码的改变事件 监听页码改变事件current-change  将最新的页码赋值给当前页面 然后重新加载数据
+    changePage (newPage) {
+      // alert(newPage)
+      // newPage是最新的切换页码
+      this.page.currentPage = newPage
+      // 重新拉去数据
+      this.getComment()
+    },
     getComment () {
       this.$axios({
         url: '/articles',
         params: {
-          response_type: 'comment'
+          response_type: 'comment',
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
         }
       }).then((result) => {
         // console.log(result)
         this.list = result.data.results
+        this.page.total = result.data.total_count
       })
     },
     formaterBool (row, column, cellvalue, index) {
@@ -66,13 +98,15 @@ export default {
             // 是打开还是关闭  此状态和评论状态相反
             allow_comment: !row.comment_status
           }
-        }).then(() => {
-          this.$message.success(`${mess}评论成功`)
-          // 重新拉取数据
-          this.getComment()
-        }).catch(() => {
-          this.$message.error(`${mess}评论失败`)
         })
+          .then(() => {
+            this.$message.success(`${mess}评论成功`)
+            // 重新拉取数据
+            this.getComment()
+          })
+          .catch(() => {
+            this.$message.error(`${mess}评论失败`)
+          })
       })
     }
   },

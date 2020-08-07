@@ -21,8 +21,8 @@
           <el-card class="img-card" v-for="item in list" :key="item.id">
             <img :src="item.url">
             <el-row class="operate" type="flex" align="middle" justify="space-around">
-              <i class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <i @click="collectOrCancel (item)" :style="{color:item.is_collected ? 'red' : 'black'}" class="el-icon-star-on"></i>
+              <i @click="delMaterial (item)" class="el-icon-delete-solid"></i>
             </el-row>
           </el-card>
         </div>
@@ -75,6 +75,34 @@ export default {
     }
   },
   methods: {
+    delMaterial (row) {
+      this.$confirm('是否确定删除', '提示').then(() => {
+        this.$axios({
+          url: `user/images/${row.id}`,
+          method: 'delete'
+        }).then(() => {
+          this.getMaterial()
+        })
+      }).catch(() => {
+        this.$message.error('操作失败')
+      })
+    },
+    // 给两个图标注册点击事件然后传参数item 这里用row接收参数
+    collectOrCancel (row) {
+      // 调用收藏和取消收藏接口
+      this.$axios({
+        method: 'put', // 请求类型
+        url: `/user/images/${row.id}`, // 请求地址
+        data: {
+          collect: !row.is_collected // true  or false  ?  取反 因为 收藏 => 取消收藏 没收藏  => 收藏
+        } // 放置body参数
+      }).then(() => {
+        //  成功了应该干啥
+        this.getMaterial() // 重新加载数据
+      }).catch(() => {
+        this.$message.error('操作失败')
+      })
+    },
     // 定义一个上传组件的方法 接口是formData类型
     uploadImg (params) {
       // 实例化一个formdata对象

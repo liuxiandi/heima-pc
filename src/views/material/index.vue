@@ -7,6 +7,13 @@
       <template slot="title">素材管理</template>
     </bread-crumb>
 
+  <!-- 放置上传组件 -->
+  <el-row type="flex" justify="end">
+    <el-upload action="" :http-request="uploadImg">
+    <el-button type="primary" size="small">上传图片</el-button>
+  </el-upload>
+  </el-row>
+
     <!-- 放置标签页 -->
     <el-tabs v-model="activeName" @tab-click="changeTap">
       <el-tab-pane label="全部素材" name="all">
@@ -68,6 +75,23 @@ export default {
     }
   },
   methods: {
+    // 定义一个上传组件的方法 接口是formData类型
+    uploadImg (params) {
+      // 实例化一个formdata对象
+      const data = new FormData()
+      // 加入文件参数
+      data.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data: data
+      }).then(() => {
+      // 成功 重新拉去数据
+        this.getMaterial()
+      }).catch(() => {
+        this.$message('上传失败')
+      })
+    },
     // 页码切换时会执行 然后通过 @current-change="changePage" 在分页组件中监听
     changePage (newPage) {
       // 页码切换时 会传入一个新页 然后把newPage给到currentPage

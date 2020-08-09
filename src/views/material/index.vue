@@ -7,21 +7,25 @@
       <template slot="title">素材管理</template>
     </bread-crumb>
 
-  <!-- 放置上传组件 -->
-  <el-row type="flex" justify="end">
-    <el-upload action="" :http-request="uploadImg">
-    <el-button type="primary" size="small">上传图片</el-button>
-  </el-upload>
-  </el-row>
+    <!-- 放置上传组件 -->
+    <el-row type="flex" justify="end">
+      <el-upload action :http-request="uploadImg">
+        <el-button type="primary" size="small">上传图片</el-button>
+      </el-upload>
+    </el-row>
 
     <!-- 放置标签页 -->
     <el-tabs v-model="activeName" @tab-click="changeTap">
       <el-tab-pane label="全部素材" name="all">
         <div class="img-list">
-          <el-card class="img-card" v-for="item in list" :key="item.id">
-            <img :src="item.url">
+          <el-card class="img-card" v-for="(item,index) in list" :key="item.id">
+            <img :src="item.url" @click="selectImg(index)">
             <el-row class="operate" type="flex" align="middle" justify="space-around">
-              <i @click="collectOrCancel (item)" :style="{color:item.is_collected ? 'red' : 'black'}" class="el-icon-star-on"></i>
+              <i
+                @click="collectOrCancel (item)"
+                :style="{color:item.is_collected ? 'red' : 'black'}"
+                class="el-icon-star-on"
+              ></i>
               <i @click="delMaterial (item)" class="el-icon-delete-solid"></i>
             </el-row>
           </el-card>
@@ -30,28 +34,37 @@
 
       <el-tab-pane label="收藏素材" name="second">
         <div class="img-list">
-          <el-card class="img-card" v-for="item in list" :key="item.id">
-            <img :src="item.url">
+          <el-card class="img-card" v-for="(item,index) in list" :key="item.id">
+            <img :src="item.url" @click="selectImg(index)">
           </el-card>
         </div>
-        </el-tab-pane>
+      </el-tab-pane>
     </el-tabs>
 
     <!-- 分页组件 -->
-    <el-row type='flex' justify="center" style='height:80px' align="middle">
-          <!-- 放置分页组件
+    <el-row type="flex" justify="center" style="height:80px" align="middle">
+      <!-- 放置分页组件
             total  总条数
             current-page 当前页码
             page-size 每页多少条
-          -->
-          <el-pagination background
-            :total="page.total"
-            :current-page="page.currentPage"
-            :page-size="page.pageSize"
-            @current-change="changePage"
-            layout="prev, pager, next"
-          ></el-pagination>
+      -->
+      <el-pagination
+        background
+        :total="page.total"
+        :current-page="page.currentPage"
+        :page-size="page.pageSize"
+        @current-change="changePage"
+        layout="prev, pager, next"
+      ></el-pagination>
     </el-row>
+    <!-- 放置弹层组件 -->
+    <el-dialog @opened="openEnd" :visible="dialogVisible" @close="dialogVisible = false">
+      <el-carousel ref="myCarousel" indicator-position="outside" height="400px">
+        <el-carousel-item v-for="item in list" :key="item.id">
+          <img :src="item.url" alt="" style="width:100%;height:100%">
+        </el-carousel-item>
+      </el-carousel>
+    </el-dialog>
   </el-card>
 </template>
 
@@ -71,21 +84,32 @@ export default {
         currentPage: 1,
         // 每页多少条数据
         pageSize: 8
-      }
+      },
+      dialogVisible: false
     }
   },
   methods: {
+    openEnd () {
+      // 这个时候已经打开结束 ref已经有值 可以通过ref进行设置了
+      this.$refs.myCarousel.setActiveItem(this.clickIndex) // 尝试通过这种方式设置index
+    },
+    selectImg (index) {
+      this.clickIndex = index // 将索引赋值
+      this.dialogVisible = true // 打开索引
+    },
     delMaterial (row) {
-      this.$confirm('是否确定删除', '提示').then(() => {
-        this.$axios({
-          url: `user/images/${row.id}`,
-          method: 'delete'
-        }).then(() => {
-          this.getMaterial()
+      this.$confirm('是否确定删除', '提示')
+        .then(() => {
+          this.$axios({
+            url: `user/images/${row.id}`,
+            method: 'delete'
+          }).then(() => {
+            this.getMaterial()
+          })
         })
-      }).catch(() => {
-        this.$message.error('操作失败')
-      })
+        .catch(() => {
+          this.$message.error('操作失败')
+        })
     },
     // 给两个图标注册点击事件然后传参数item 这里用row接收参数
     collectOrCancel (row) {
@@ -96,12 +120,14 @@ export default {
         data: {
           collect: !row.is_collected // true  or false  ?  取反 因为 收藏 => 取消收藏 没收藏  => 收藏
         } // 放置body参数
-      }).then(() => {
-        //  成功了应该干啥
-        this.getMaterial() // 重新加载数据
-      }).catch(() => {
-        this.$message.error('操作失败')
       })
+        .then(() => {
+          //  成功了应该干啥
+          this.getMaterial() // 重新加载数据
+        })
+        .catch(() => {
+          this.$message.error('操作失败')
+        })
     },
     // 定义一个上传组件的方法 接口是formData类型
     uploadImg (params) {
@@ -113,12 +139,14 @@ export default {
         url: '/user/images',
         method: 'post',
         data: data
-      }).then(() => {
-      // 成功 重新拉去数据
-        this.getMaterial()
-      }).catch(() => {
-        this.$message('上传失败')
       })
+        .then(() => {
+          // 成功 重新拉去数据
+          this.getMaterial()
+        })
+        .catch(() => {
+          this.$message('上传失败')
+        })
     },
     // 页码切换时会执行 然后通过 @current-change="changePage" 在分页组件中监听
     changePage (newPage) {
@@ -157,30 +185,30 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .img-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      .img-card {
-          width: 150px;
-          height: 150px;
-          margin: 20px 30px;
-          position: relative;
-          img {
-              width: 100%;
-              height: 100%;
-          }
-          .operate {
-              position: absolute;
-              left:0;
-              bottom:0;
-              width: 100%;
-              background: #f4f5f6;
-              height: 30px;
-              i  {
-                  font-size:20px;
-              }
-          }
+.img-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  .img-card {
+    width: 150px;
+    height: 150px;
+    margin: 20px 30px;
+    position: relative;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+    .operate {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      background: #f4f5f6;
+      height: 30px;
+      i {
+        font-size: 20px;
       }
+    }
   }
+}
 </style>
